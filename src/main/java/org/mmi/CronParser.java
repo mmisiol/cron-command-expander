@@ -1,5 +1,7 @@
 package org.mmi;
 
+import java.util.Optional;
+
 import static java.lang.String.format;
 
 public class CronParser {
@@ -11,7 +13,7 @@ public class CronParser {
 
     public String parse(String cronString) {
         String parts[] = cronString.split(" ");
-        if (parts.length != 6) {
+        if (parts.length < 7) {
             throw new IllegalArgumentException("Incorrect cron string. See reference -> https://crontab.guru/");
         }
 
@@ -21,9 +23,18 @@ public class CronParser {
         result.append(format("%-14s %s%n", "day of month", partExpander.expandPart(parts[2], 1, 31)));
         result.append(format("%-14s %s%n", "month", partExpander.expandPart(replaceAlphanumeric(parts[3], MONTHS), 1, 12)));
         result.append(format("%-14s %s%n", "day of week", partExpander.expandPart(replaceAlphanumeric(parts[4], DAYS), 1, 7)));
-        result.append(format("%-14s %s%n", "command", parts[5]));
-
+        result.append(format("%-14s %s%n", "year", partExpander.expandPart(parts[5], 2020, 2025)));
+        result.append(format("%-14s %s%n", "command", parts[6]));
+        extractComment(cronString).ifPresent(com -> result.append(format("%-14s %s%n", "comment", com)));
+        result.append("\n");
         return result.toString();
+    }
+
+    private Optional<String> extractComment(String cronString) {
+        if (cronString.contains("#")) {
+            return Optional.of(cronString.substring(cronString.indexOf('#') + 1).trim());
+        }
+        return Optional.empty();
     }
 
 

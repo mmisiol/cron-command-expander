@@ -34,10 +34,13 @@ public class PartExpander {
         int end = max;
         String rangeString = subPart;
 
+
+        boolean isStep = false;
         if (subPart.contains("/")) {
             String[] split = subPart.split("/");
             rangeString = split[0];
             step = parseInt(split[1]);
+            isStep = true;
         }
 
         if (!rangeString.equals("*")) {
@@ -47,7 +50,7 @@ public class PartExpander {
                 end = min(max, parseInt(rangeParts[1]));
             } else {
                 begin = max(min, parseInt(rangeString));
-                end = min(max, parseInt(rangeString));
+                end = isStep ? max : min(max, parseInt(rangeString));
             }
         }
 

@@ -1,5 +1,8 @@
 package org.mmi;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class Main {
 
     private final static String README = "https://github.com/mmisiol/cron-command-expander/blob/master/readme.md";
